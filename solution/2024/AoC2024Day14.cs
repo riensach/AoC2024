@@ -3,7 +3,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Data.Common;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class sandUnit
     {

@@ -6,7 +6,7 @@ using System.Data.Common;
 using System.Reflection;
 using System.Collections.Generic;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay3
     {

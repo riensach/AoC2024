@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay20
     {

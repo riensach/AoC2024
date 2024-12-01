@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AoC2023.classes
+namespace AoC2024.classes
 {
     class ReadFromFile
     {

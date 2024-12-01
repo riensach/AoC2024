@@ -6,7 +6,7 @@ using Windows.UI.StartScreen;
 using System.Collections.Generic;
 using System.Threading.Tasks.Dataflow;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay10
     {

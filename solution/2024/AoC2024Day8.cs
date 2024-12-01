@@ -2,13 +2,13 @@
 using System.IO;
 using System.Diagnostics;
 using System.Threading.Tasks.Sources;
-using static AoC2023.solution.AoCDay7;
+using static AoC2024.solution.AoCDay7;
 using static ABI.System.Collections.Generic.IReadOnlyDictionary_Delegates;
 using System.ComponentModel;
 using System.Collections.Generic;
-using static AoC2023.solution.AoCDay8;
+using static AoC2024.solution.AoCDay8;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay8
     {

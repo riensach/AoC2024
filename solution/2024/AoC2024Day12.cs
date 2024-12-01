@@ -8,7 +8,7 @@ using Windows.Media.Audio;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay12
     {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.ComponentModel;
 using ABI.Windows.ApplicationModel;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay16
     {

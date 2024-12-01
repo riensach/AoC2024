@@ -2,12 +2,13 @@
 using System.IO;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
-using AoC2023.solution;
-using AoC2023.classes;
+using AoC2024.solution;
+using AoC2024.solution;
+using AoC2024.classes;
 using AoC2019.solution;
 using AoC2015.solution;
 
-namespace AdventofCode2023
+namespace AdventofCode2024
 {
     public class DaySelection
     {
@@ -160,9 +161,14 @@ namespace AdventofCode2023
                     Console.Write(AoCDay252023.output);
                     break;
 
+                case (1, 2024):
+                    AoC2024.solution.AoCDay1 AoCDay12024 = new AoC2024.solution.AoCDay1(selectedPart, input);
+                    Console.Write(AoCDay12024.output);
+                    break;
+
                 default:
-                    AoC2023.solution.AoCDay1 AoCDay02023 = new AoC2023.solution.AoCDay1(selectedPart, input);
-                    Console.Write(AoCDay02023.output);
+                    AoC2024.solution.AoCDay1 AoCDay02024 = new AoC2024.solution.AoCDay1(selectedPart, input);
+                    Console.Write(AoCDay02024.output);
                     break;
             }
 

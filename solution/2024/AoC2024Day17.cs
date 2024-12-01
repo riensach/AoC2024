@@ -5,7 +5,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Drawing;
 using System.ComponentModel;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay17
     {
@@ -23,7 +23,7 @@ namespace AoC2023.solution
             commands = input.ToCharArray();
             commandsSize = commands.Length;
             createRockFormations();
-            solveRocks(45000, 2023);
+            solveRocks(45000, 2024);
             int highRock = arrayLength - highestRock;
             output += "Part A: Highest Rock: " + highRock;
             highestRock = 500000000;

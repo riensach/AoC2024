@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Linq;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
 
     public class AoCDay24

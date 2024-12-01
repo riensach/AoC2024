@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Collections;
 using static ABI.System.Collections.Generic.IReadOnlyDictionary_Delegates;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
         public class AoCDay13
         {

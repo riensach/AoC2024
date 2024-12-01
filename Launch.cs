@@ -1,9 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //Console.WriteLine("Hello, World!");
 using System;
-using AdventofCode2023;
+using AdventofCode2024;
 
-namespace AdventofCode2023
+namespace AdventofCode2024
 {
 
     class Launch
@@ -12,12 +12,12 @@ namespace AdventofCode2023
         {
             bool endApp = false;
             // Display title as the C# console calculator app.
-            Console.WriteLine("Advent of Code 2023 in C# \r");
+            Console.WriteLine("Advent of Code 2024 in C# \r");
             Console.WriteLine("------------------------\n");
 
 
-            int daySelection = 19;
-            int yearSelection = 2023;
+            int daySelection = 1;
+            int yearSelection = 2024;
             int partSelection = 1;
 
             DaySelection Advent = new DaySelection(daySelection, partSelection, yearSelection);

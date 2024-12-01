@@ -2,11 +2,11 @@
 using System.IO;
 using System.Diagnostics;
 using System.Data.Common;
-using static AoC2023.solution.AoCDay8;
+using static AoC2024.solution.AoCDay8;
 using System.ComponentModel;
 using System.Collections.Generic;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay9
     {

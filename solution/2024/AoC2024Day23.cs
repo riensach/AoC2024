@@ -2,7 +2,7 @@
 using System.IO;
 using System.Diagnostics;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay23
     {

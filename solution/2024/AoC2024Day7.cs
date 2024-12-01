@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Security.Cryptography.X509Certificates;
 using System.Linq;
 using System.Collections.Immutable;
-using static AoC2023.solution.AoCDay7;
+using static AoC2024.solution.AoCDay7;
 using System.Xml.Linq;
 using System.ComponentModel;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Collections;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay7
     {

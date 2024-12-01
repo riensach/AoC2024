@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks.Sources;
 using Newtonsoft.Json.Linq;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay2
     {

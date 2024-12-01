@@ -6,14 +6,14 @@ using static ABI.System.Collections.Generic.IReadOnlyDictionary_Delegates;
 using System.Linq;
 using Windows.Globalization.DateTimeFormatting;
 using System.ComponentModel;
-using static AoC2023.solution.AoCDay5;
+using static AoC2024.solution.AoCDay5;
 using Newtonsoft.Json.Linq;
 using System.Xml.Linq;
 using LoreSoft.MathExpressions;
 using Windows.Data.Xml.Dom;
 using System.Collections.Generic;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay5
     {

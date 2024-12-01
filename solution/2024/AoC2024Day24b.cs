@@ -3,7 +3,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Text;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class Blizzard
     {

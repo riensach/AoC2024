@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     
     public class AoCDay15

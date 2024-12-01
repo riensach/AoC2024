@@ -9,7 +9,7 @@ using LoreSoft.MathExpressions;
 using System.Collections.Generic;
 using System.Data.Common;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay11
     {

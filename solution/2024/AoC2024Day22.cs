@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay22
     {

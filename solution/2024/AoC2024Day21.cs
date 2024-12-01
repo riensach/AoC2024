@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using LoreSoft.MathExpressions;
 
-namespace AoC2023.solution
+namespace AoC2024.solution
 {
     public class AoCDay21
     {
