@@ -3,6 +3,9 @@ using System.IO;
 using System.Diagnostics;
 using System.Threading.Tasks.Sources;
 using Newtonsoft.Json.Linq;
+using System.Runtime.CompilerServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Reflection;
 
 namespace AoC2024.solution
 {
@@ -25,35 +28,8 @@ namespace AoC2024.solution
                 isSafe = 0;
                 isIncreasing = 0;
 
-                for (int i = 0; i < games.Length - 1; i++)
-                {
-                    if (Math.Abs(Int32.Parse(games[i]) - Int32.Parse(games[i + 1])) > 3 || Math.Abs(Int32.Parse(games[i]) - Int32.Parse(games[i + 1])) < 1)
-                    {
-                        // Not safe, so break
-                        isSafe = 1;
-                        break;
-                    }
-                    if (i == 0)
-                    {
-                        if (Int32.Parse(games[i]) > Int32.Parse(games[i + 1]))
-                        {
-                            isIncreasing = 1;
-                        }
-                    }
-                    else
-                    {
-                        if ((Int32.Parse(games[i]) > Int32.Parse(games[i + 1]) && isIncreasing == 1) || (Int32.Parse(games[i]) < Int32.Parse(games[i + 1]) && isIncreasing == 0))
-                        {
-                            
-                        } else
-                        {
-                            // Not safe, so break
-                            isSafe = 1;
-                            break;
-                        }
-                    }
-                }
-                
+                isSafe = checkSafe(games);
+
                 if (isSafe == 0)
                 {
                     //Console.WriteLine("FOUND SAFE REPORT line " + line + "\n");
@@ -64,202 +40,97 @@ namespace AoC2024.solution
 
 
 
-            Console.WriteLine("Safe Reports " + safeReports + "\n");
+            Console.WriteLine("Safe Reports Part A: " + safeReports + "\n");
 
 
 
 
-            /*
 
-
-
-            List<int> possibleGames = new List<int>();
-            int redCubes = 12; int greenCubes = 13; int blueCubes = 14; int idSum = 0;
+            safeReports = 0;
+            int foundSafe = 0;
 
             foreach (string line in lines)
             {
-                int redCubesGame = 0; int greenCubesGame = 0; int blueCubesGame = 0;
-                string[] games = line.Split(':');
-                string gameName = games[0].Replace("Game ", "");
-                string[] sections = games[1].Split(';');
-                int possibleGame = 1;
-                foreach (string section in sections)
+                string[] games = line.Split(" ");
+                foundSafe = 0;
+                foundSafe = foundSafe + checkSafe(games);
+                Console.WriteLine(line + "\n");
+
+                if (foundSafe == 0)
                 {
-                    string[] cubes = section.Split(',');
-                    if (cubes.Count() < 1)
+                    // Console.WriteLine("FOUND SAFE REPORT line " + line + " - " + foundSafe + "\n");
+                    games.ToList().ForEach(i => Console.Write(i.ToString() + " "));
+                    Console.Write("\n");
+                    safeReports++;
+                    continue;
+                } else
+                {
+                    for (int i = 0; i < games.Length; i++)
                     {
-                        string cubeInfo = section.Trim();
-                        string[] cubeDetails = cubeInfo.Split(' ');
-                        if (cubeDetails[1] == "green")
-                        {
-                            greenCubesGame = greenCubesGame + Int32.Parse(cubeDetails[0]);
-                            if(Int32.Parse(cubeDetails[0]) > greenCubes)
-                            {
-                                possibleGame = 0;
-                            }
-                        }
-                        else if (cubeDetails[1] == "blue")
-                        {
-                            blueCubesGame = blueCubesGame + Int32.Parse(cubeDetails[0]);
-                            if (Int32.Parse(cubeDetails[0]) > blueCubes)
-                            {
-                                possibleGame = 0;
-                            }
-                        }
-                        else if (cubeDetails[1] == "red")
-                        {
-                            redCubesGame = redCubesGame + Int32.Parse(cubeDetails[0]);
-                            if (Int32.Parse(cubeDetails[0]) > redCubes)
-                            {
-                                possibleGame = 0;
-                            }
-                        }
+                        var foos = new List<string>(games);
+                        foos.RemoveAt(i);
+                        string[] gamesNew = foos.ToArray();
+                        gamesNew.ToList().ForEach(i => Console.WriteLine(i.ToString() + " "));
+                        Console.Write("\n");
+                        //Console.WriteLine(gamesNew.ToString() +  " - ") ;
+                        foundSafe = foundSafe + checkSafe(gamesNew);
+                    }
+
+                    if (foundSafe < games.Length + 1)
+                    {
+                        //Console.WriteLine("FOUND SAFE REPORT line " + line + " - " + foundSafe + "\n");
+                        safeReports++;
+                    }
+                }
+
+                
+
+            }
+
+            // 838 too high
+            // 463 too low
+            // 441 too low
+
+            Console.WriteLine("Safe Reports Part B: " + safeReports + "\n");
+
+
+
+
+        }
+        public int checkSafe(string[] games)
+        {
+            int isSafe = 0;
+            int isIncreasing = 0;
+            for (int i = 0; i < games.Length - 1; i++)
+            {
+                if (Math.Abs(Int32.Parse(games[i]) - Int32.Parse(games[i + 1])) > 3 || Math.Abs(Int32.Parse(games[i]) - Int32.Parse(games[i + 1])) < 1)
+                {
+                    // Not safe, so break
+                    isSafe = 1;
+                    break;
+                }
+                if (i == 0)
+                {
+                    if (Int32.Parse(games[i]) > Int32.Parse(games[i + 1]))
+                    {
+                        isIncreasing = 1;
+                    }
+                }
+                else
+                {
+                    if ((Int32.Parse(games[i]) > Int32.Parse(games[i + 1]) && isIncreasing == 1) || (Int32.Parse(games[i]) < Int32.Parse(games[i + 1]) && isIncreasing == 0))
+                    {
+
                     }
                     else
                     {
-                        foreach (string cube in cubes)
-                        {
-                            string cubeInfo = cube.Trim();
-                            string[] cubeDetails = cubeInfo.Split(' ');
-                            if (cubeDetails[1] == "green")
-                            {
-                                greenCubesGame = greenCubesGame + Int32.Parse(cubeDetails[0]);
-                                if (Int32.Parse(cubeDetails[0]) > greenCubes)
-                                {
-                                    possibleGame = 0;
-                                }
-                            }
-                            else if (cubeDetails[1] == "blue")
-                            {
-                                blueCubesGame = blueCubesGame + Int32.Parse(cubeDetails[0]);
-                                if (Int32.Parse(cubeDetails[0]) > blueCubes)
-                                {
-                                    possibleGame = 0;
-                                }
-                            }
-                            else if (cubeDetails[1] == "red")
-                            {
-                                redCubesGame = redCubesGame + Int32.Parse(cubeDetails[0]);
-                                if (Int32.Parse(cubeDetails[0]) > redCubes)
-                                {
-                                    possibleGame = 0;
-                                }
-                            }
-                        }
+                        // Not safe, so break
+                        isSafe = 1;
+                        break;
                     }
                 }
-                if (possibleGame > 0)
-                {
-                    possibleGames.Add(Int32.Parse(gameName));
-                    Console.WriteLine("Adding game " + gameName + "\n");
-                }
-                //if (redCubesGame <= redCubes && greenCubesGame <= greenCubes && blueCubesGame <= blueCubes)
-                //{
-                //    possibleGames.Add(Int32.Parse(gameName));
-                //}
             }
-
-            foreach (int possibleGame in possibleGames)
-            {
-                idSum = idSum + possibleGame;
-            }
-
-            output = "Part A: " + idSum;
-
-
-
-
-
-            List<int> possibleGamesSecond = new List<int>();
-            //int redCubes = 12; int greenCubes = 13; int blueCubes = 14;int idSum = 0;
-
-            foreach (string line in lines)
-            {
-                int redCubesGame = 0; int greenCubesGame = 0; int blueCubesGame = 0;
-                string[] games = line.Split(':');
-                string gameName = games[0].Replace("Game ", "");
-                string[] sections = games[1].Split(';');
-                foreach (string section in sections)
-                {
-                    string[] cubes = section.Split(',');
-                    if(cubes.Count() < 1)
-                    {
-                        string cubeInfo = section.Trim();
-                        string[] cubeDetails = cubeInfo.Split(' ');
-                        if (cubeDetails[1] == "green")
-                        {
-                            if(Int32.Parse(cubeDetails[0]) > greenCubesGame)
-                            {
-                                greenCubesGame = Int32.Parse(cubeDetails[0]);
-                            }
-                            //greenCubesGame = greenCubesGame + Int32.Parse(cubeDetails[0]);
-                        }
-                        else if (cubeDetails[1] == "blue")
-                        {
-                            if (Int32.Parse(cubeDetails[0]) > blueCubesGame)
-                            {
-                                blueCubesGame = Int32.Parse(cubeDetails[0]);
-                            }
-                            //blueCubesGame = blueCubesGame + Int32.Parse(cubeDetails[0]);
-                        }
-                        else if (cubeDetails[1] == "red")
-                        {
-                            if (Int32.Parse(cubeDetails[0]) > redCubesGame)
-                            {
-                                redCubesGame = Int32.Parse(cubeDetails[0]);
-                            }
-                            //redCubesGame = redCubesGame + Int32.Parse(cubeDetails[0]);
-                        }
-                    } else
-                    {
-                        foreach (string cube in cubes)
-                        {
-                            string cubeInfo = cube.Trim();
-                            string[] cubeDetails = cubeInfo.Split(' ');
-                            if (cubeDetails[1]=="green")
-                            {
-                                if (Int32.Parse(cubeDetails[0]) > greenCubesGame)
-                                {
-                                    greenCubesGame = Int32.Parse(cubeDetails[0]);
-                                }
-                                //greenCubesGame = greenCubesGame + Int32.Parse(cubeDetails[0]);
-                            } else if (cubeDetails[1] == "blue")
-                            {
-                                if (Int32.Parse(cubeDetails[0]) > blueCubesGame)
-                                {
-                                    blueCubesGame = Int32.Parse(cubeDetails[0]);
-                                }
-                                //blueCubesGame = blueCubesGame + Int32.Parse(cubeDetails[0]);
-                            } else if (cubeDetails[1] == "red")
-                            {
-                                if (Int32.Parse(cubeDetails[0]) > redCubesGame)
-                                {
-                                    redCubesGame = Int32.Parse(cubeDetails[0]);
-                                }
-                                //redCubesGame = redCubesGame + Int32.Parse(cubeDetails[0]);
-                            }
-                        }
-                    }
-                }
-                int gamePower = 0;
-                gamePower = greenCubesGame * blueCubesGame * redCubesGame;
-                Console.WriteLine("Game power " + gamePower + "\n");
-
-                possibleGamesSecond.Add(gamePower);
-                
-            }
-            idSum = 0;
-            foreach (int possibleGame in possibleGamesSecond)
-            {
-                idSum = idSum + possibleGame;
-            }
-
-            output += "\nPart B: " + idSum;
-
-            */
-
-
-
+            return isSafe;
 
         }
 
