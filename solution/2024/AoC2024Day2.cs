@@ -15,6 +15,62 @@ namespace AoC2024.solution
                 StringSplitOptions.None
             );
 
+            int safeReports = 0;
+            int isSafe = 0;
+            int isIncreasing = 0;
+
+            foreach (string line in lines)
+            {
+                string[] games = line.Split(" ");
+                isSafe = 0;
+                isIncreasing = 0;
+
+                for (int i = 0; i < games.Length - 1; i++)
+                {
+                    if (Math.Abs(Int32.Parse(games[i]) - Int32.Parse(games[i + 1])) > 3 || Math.Abs(Int32.Parse(games[i]) - Int32.Parse(games[i + 1])) < 1)
+                    {
+                        // Not safe, so break
+                        isSafe = 1;
+                        break;
+                    }
+                    if (i == 0)
+                    {
+                        if (Int32.Parse(games[i]) > Int32.Parse(games[i + 1]))
+                        {
+                            isIncreasing = 1;
+                        }
+                    }
+                    else
+                    {
+                        if ((Int32.Parse(games[i]) > Int32.Parse(games[i + 1]) && isIncreasing == 1) || (Int32.Parse(games[i]) < Int32.Parse(games[i + 1]) && isIncreasing == 0))
+                        {
+                            
+                        } else
+                        {
+                            // Not safe, so break
+                            isSafe = 1;
+                            break;
+                        }
+                    }
+                }
+                
+                if (isSafe == 0)
+                {
+                    //Console.WriteLine("FOUND SAFE REPORT line " + line + "\n");
+                    safeReports++;
+                }
+
+            }
+
+
+
+            Console.WriteLine("Safe Reports " + safeReports + "\n");
+
+
+
+
+            /*
+
 
 
             List<int> possibleGames = new List<int>();
@@ -200,8 +256,8 @@ namespace AoC2024.solution
 
             output += "\nPart B: " + idSum;
 
+            */
 
-            
 
 
 

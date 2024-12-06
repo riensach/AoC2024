@@ -166,6 +166,11 @@ namespace AdventofCode2024
                     Console.Write(AoCDay12024.output);
                     break;
 
+                case (2, 2024):
+                    AoC2024.solution.AoCDay2 AoCDay22024 = new AoC2024.solution.AoCDay2(selectedPart, input);
+                    Console.Write(AoCDay22024.output);
+                    break;
+
                 default:
                     AoC2024.solution.AoCDay1 AoCDay02024 = new AoC2024.solution.AoCDay1(selectedPart, input);
                     Console.Write(AoCDay02024.output);
