@@ -50,7 +50,7 @@ namespace AoC2024.solution
                     string currentPage = rulesToCheck;
                     foreach (string checkingPages in printingRules.pagesUpdate)
                     {
-                        // HJere is where we check the valid order
+                        // Here is where we check the valid order
                     }
 
 
