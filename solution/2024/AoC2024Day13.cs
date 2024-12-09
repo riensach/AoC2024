@@ -50,7 +50,7 @@ namespace AoC2024.solution
                         if (character.ToString() == "\r") continue;
                         if (character.ToString() == "\n") continue;
                         //Console.WriteLine(character.ToString());
-                        grid[row, column] = character.ToString();
+                         
                         column++;
                     }
                     row++;

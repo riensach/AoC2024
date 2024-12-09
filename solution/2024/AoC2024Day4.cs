@@ -2,11 +2,19 @@
 using System.IO;
 using System.Diagnostics;
 using static System.Collections.Specialized.BitVector32;
+using System.Data.Common;
+using System.Reflection;
+using System.Collections.Generic;
 
 namespace AoC2024.solution
 {
     public class AoCDay4
     {
+        public string[,] grid;
+        public string[,] gridTemp;
+        int arrayLength = 0;
+        int arrayWidth = 0;
+        Dictionary<string, string> reflectionLines = new Dictionary<string, string>();
 
         public AoCDay4(int selectedPart, string input)
         {
@@ -15,162 +23,293 @@ namespace AoC2024.solution
                 StringSplitOptions.None
             );
 
-            int totalWinningPoints = 0;
-            Dictionary<int, int> totalCardGroups = new Dictionary<int, int>();
+            List<char> navigationList = new List<char>();
+            List<string> startingNodeList = new List<string>();
+            arrayLength = lines.Count();
+            arrayWidth = lines[0].Length;
+            grid = new string[arrayLength, arrayWidth];
+            grid = createGrid(grid, arrayLength, arrayWidth);
+
+            string outputGrid = printGrid(arrayLength, arrayWidth);
+            //output += outputGrid;
+
+            int row = 0;
+            int column = 0;
             foreach (string line in lines)
             {
-                string[] games = line.Split(':');
-                string gameName = games[0].Replace("Card ", "");
-                totalCardGroups.Add(Int32.Parse(gameName), 1);
-                string cardSections = games[1].Trim();
-                string[] sections = cardSections.Split(" | ");
-                List<int> winningNumbers = new List<int>();
-                List<int> myCards = new List<int>();
-                
-                string[] winningNumberCards = sections[0].Split(' ');
-                foreach (string card in winningNumberCards)
+                foreach (var character in line)
                 {
-                    string cardNumbers = card.Trim();
-                    if(cardNumbers != "")
-                    {
-                        //Console.WriteLine("Card:"+cardNumbers+"\n");
-                        winningNumbers.Add(Int32.Parse(cardNumbers));
-                    }
+                    grid[row, column] = character.ToString();
+                    var startingLocation = new Position(row, column);
+                    var explorerInfo = new Explorer(character.ToString(), startingLocation);
+                    string temp = row+","+column;
+                    //Console.WriteLine(character.ToString());
+                    reflectionLines.Add(temp, character.ToString());
+                    column++;
                 }
-                string[] myCardsList = sections[1].Split(' ');
-                int winningCards = 0;
-                int winningCardsPoints = 0;
-                foreach (string card in myCardsList)
-                {
-                    string cardNumbers = card.Trim();
-                    if (cardNumbers != "")
-                    {
-                        //Console.WriteLine("Card:" + cardNumbers + "\n");
-
-                        myCards.Add(Int32.Parse(cardNumbers));
-                        if(winningNumbers.Contains(Int32.Parse(cardNumbers)))
-                        {
-                            winningCards++;
-                            if(winningCards > 1)
-                            {
-                                winningCardsPoints = winningCardsPoints * 2;
-                            } else
-                            {
-                                winningCardsPoints++;
-                            }
-                            //Console.WriteLine("Winning Number:" + cardNumbers + " for card "+ gameName+"\n");
-                        }
-
-                    }
-                }
-                totalWinningPoints = totalWinningPoints + winningCardsPoints;
-
-
+                row++;
+                column = 0;
             }
-            output = "Part A: " + totalWinningPoints;
 
+            foreach (KeyValuePair<string, string> kvp in reflectionLines)
+            {
+                //textBox3.Text += ("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
+                //Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
+            }
 
-
-
-            
-            int totalCards = 0;
+            row = 0;
+            column = 0;
+            int foundXMas = 0;
+            int foundXMasSecond = 0;
             foreach (string line in lines)
             {
-                string[] games = line.Split(':');
-                string gameName = games[0].Replace("Card ", "");
-                string cardSections = games[1].Trim();
-                string[] sections = cardSections.Split(" | ");
-                List<int> winningNumbers = new List<int>();
-                List<int> myCards = new List<int>();
-
-                string[] winningNumberCards = sections[0].Split(' ');
-                foreach (string card in winningNumberCards)
+                foreach (var character in line)
                 {
-                    string cardNumbers = card.Trim();
-                    if (cardNumbers != "")
-                    {
-                        //Console.WriteLine("Card:"+cardNumbers+"\n");
-                        winningNumbers.Add(Int32.Parse(cardNumbers));
+                    if(character.ToString() == "X") {
+                        // Start the search!
+                        foundXMas = foundXMas + findString(row, column, grid);
+                        //Console.WriteLine("Looking from: " + row + " - " + column + "\n");
                     }
-                }
-                string[] myCardsList = sections[1].Split(' ');
-                int winningCards = 0;
-                int winningCardsPoints = 0;
-                foreach (string card in myCardsList)
-                {
-                    string cardNumbers = card.Trim();
-                    if (cardNumbers != "")
+                    if (character.ToString() == "A")
                     {
-                        //Console.WriteLine("Card:" + cardNumbers + "\n");
-
-                        myCards.Add(Int32.Parse(cardNumbers));
-                        if (winningNumbers.Contains(Int32.Parse(cardNumbers)))
-                        {
-                            winningCards++;
-
-                            //Console.WriteLine("Winning Number:" + cardNumbers + " for card "+ gameName+"\n");
-                        }
-
+                        // Start the search!
+                        foundXMasSecond = foundXMasSecond + findStringSecond(row, column, grid);
+                        //Console.WriteLine("Looking from: " + row + " - " + column + "\n");
                     }
+                    column++;
                 }
-                for (int i = 1; i <= winningCards; i++)
-                {
-                    int newName = Int32.Parse(gameName) + i;
-                    totalCardGroups[newName] = (totalCardGroups[newName] + (1 * totalCardGroups[Int32.Parse(gameName)]));
-                    //Console.WriteLine("Adding a winning card to #:" + newName + " from game " + gameName + "\n");
-                }
-
-
+                row++;
+                column = 0;
             }
 
-            foreach (KeyValuePair<int, int> cards in totalCardGroups)
-            {
-                //Console.WriteLine("Card #:" + cards.Key + " total cards " + cards.Value + "\n");
-                totalCards = totalCards + cards.Value;
-            }
+            Console.WriteLine("Found xmas part a: " + foundXMas);
+            Console.WriteLine("Found xmas part B: " + foundXMasSecond);
 
-                output += "\nPart B: " + totalCards;
-
-            /*
-            int fullyContained = 0;
-            int overlapped = 0;
-
-            foreach (string line in lines)
-            {
-                string[] eitherSide = line.Split(',');
-                string[] firstItems = eitherSide[0].Split('-');
-                string[] secondItems = eitherSide[1].Split('-');
-
-                List<int> firstItemsList = new List<int>();
-                List<int> secondItemsList = new List<int>();
-
-                for (int i = Int32.Parse(firstItems[0]); i <= Int32.Parse(firstItems[1]); i++)
-                {
-                    firstItemsList.Add(i);
-                }
-
-                for (int i = Int32.Parse(secondItems[0]); i <= Int32.Parse(secondItems[1]); i++)
-                {
-                    secondItemsList.Add(i);
-                }
-
-                if((firstItemsList.First() >= secondItemsList.First() && firstItemsList.Last() <= secondItemsList.Last()) || (secondItemsList.First() >= firstItemsList.First() && secondItemsList.Last() <= firstItemsList.Last()))
-                {
-                    fullyContained++;
-                }
-
-                if ((firstItemsList.First() >= secondItemsList.First() && firstItemsList.First() <= secondItemsList.Last()) || (secondItemsList.First() >= firstItemsList.First() && secondItemsList.First() <= firstItemsList.Last()))
-                {
-                    overlapped++;
-                }
-
-            }
-            */
-
-            //output = "Part A: " + fullyContained;
-            //output += "\nPart B: " + overlapped;
+            //outputGrid = printGrid(arrayLength, arrayWidth);
+            //output += outputGrid;
         }
 
         public string output;
+
+
+        public string printGrid(int xSize, int ySize)
+        {
+            string output = "\nGrid:\n";
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    string toWrite = grid[x, y];
+                    //System.Console.Write(toWrite);
+
+                    output += "" + toWrite;
+                }
+                //System.Console.Write("\n");
+                output += "\n";
+            }
+
+            return output;
+        }
+
+        public int findString(int x, int y, string[,] grid)
+        {
+            string mIndex = x + "," + y;
+            string aIndex = x + "," + y;
+            string sIndex = x + "," + y;
+            var mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            var aItem = (reflectionLines.ContainsKey(aIndex)) ? reflectionLines[aIndex] : ".";
+            var sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            int foundXmasCount = 0;
+
+
+            mIndex = (x - 1) + "," + y;
+            aIndex = (x - 2) + "," + y;
+            sIndex = (x - 3) + "," + y;
+            mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex]:".";
+            aItem = (reflectionLines.ContainsKey(aIndex)) ? reflectionLines[aIndex] :".";
+            sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] :".";
+            if (mItem == "M" && aItem == "A" && sItem == "S")
+            {
+                foundXmasCount++;
+            }
+
+            mIndex = (x - 1) + "," + (y - 1);
+            aIndex = (x - 2) + "," + (y - 2);
+            sIndex = (x - 3) + "," + (y - 3);
+            mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            aItem = (reflectionLines.ContainsKey(aIndex)) ? reflectionLines[aIndex] : ".";
+            sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            if (mItem == "M" && aItem == "A" && sItem == "S")
+            {
+                foundXmasCount++;
+            }
+
+            mIndex = (x - 1) + "," + (y + 1);
+            aIndex = (x - 2) + "," + (y + 2);
+            sIndex = (x - 3) + "," + (y + 3);
+            mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            aItem = (reflectionLines.ContainsKey(aIndex)) ? reflectionLines[aIndex] : ".";
+            sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            if (mItem == "M" && aItem == "A" && sItem == "S")
+            {
+                foundXmasCount++;
+            }
+
+            mIndex = (x + 1) + "," + y;
+            aIndex = (x + 2) + "," + y;
+            sIndex = (x + 3) + "," + y;
+            mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            aItem = (reflectionLines.ContainsKey(aIndex)) ? reflectionLines[aIndex] : ".";
+            sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            if (mItem == "M" && aItem == "A" && sItem == "S")
+            {
+                foundXmasCount++;
+            }
+
+            mIndex = (x + 1) + "," + (y + 1);
+            aIndex = (x + 2) + "," + (y + 2);
+            sIndex = (x + 3) + "," + (y + 3);
+            mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            aItem = (reflectionLines.ContainsKey(aIndex)) ? reflectionLines[aIndex] : ".";
+            sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            if (mItem == "M" && aItem == "A" && sItem == "S")
+            {
+                foundXmasCount++;
+            }
+
+            mIndex = (x + 1) + "," + (y - 1);
+            aIndex = (x + 2) + "," + (y - 2);
+            sIndex = (x + 3) + "," + (y - 3);
+            mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            aItem = (reflectionLines.ContainsKey(aIndex)) ? reflectionLines[aIndex] : ".";
+            sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            if (mItem == "M" && aItem == "A" && sItem == "S")
+            {
+                foundXmasCount++;
+            }
+
+            mIndex = x + "," + (y - 1);
+            aIndex = x + "," + (y - 2);
+            sIndex = x + "," + (y - 3);
+            mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            aItem = (reflectionLines.ContainsKey(aIndex)) ? reflectionLines[aIndex] : ".";
+            sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            if (mItem == "M" && aItem == "A" && sItem == "S")
+            {
+                foundXmasCount++;
+            }            
+            
+            mIndex = x + "," + (y + 1);
+            aIndex = x + "," + (y + 2);
+            sIndex = x + "," + (y + 3);
+            mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            aItem = (reflectionLines.ContainsKey(aIndex)) ? reflectionLines[aIndex] : ".";
+            sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            if (mItem == "M" && aItem == "A" && sItem == "S")
+            {
+                foundXmasCount++;
+            }
+            
+
+            //Find above
+            //Find below
+            //Find left
+            //Find right
+            //Find diagonal left up
+            //Find diagonal left down
+            //Find diagonal right up
+            //Find diagonal right down
+
+            return foundXmasCount++;
+        }
+
+
+
+        public int findStringSecond(int x, int y, string[,] grid)
+        {
+            string mIndex = x + "," + y;
+            string mIndex2 = x + "," + y;
+            string sIndex = x + "," + y;
+            string sIndex2 = x + "," + y;
+            var mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            var mItem2 = (reflectionLines.ContainsKey(mIndex2)) ? reflectionLines[mIndex2] : ".";
+            var sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            var sItem2 = (reflectionLines.ContainsKey(sIndex2)) ? reflectionLines[sIndex2] : ".";
+            int foundXmasCount = 0;
+
+
+            mIndex = (x - 1) + "," + (y - 1);
+            mIndex2 = (x - 1) + "," + (y + 1);
+            sIndex = (x + 1) + "," + (y - 1);
+            sIndex2 = (x + 1) + "," + (y + 1);
+            mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            mItem2 = (reflectionLines.ContainsKey(mIndex2)) ? reflectionLines[mIndex2] : ".";
+            sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            sItem2 = (reflectionLines.ContainsKey(sIndex2)) ? reflectionLines[sIndex2] : ".";
+            if (mItem == "M" && mItem2 == "M" && sItem == "S" && sItem2 == "S")
+            {
+                foundXmasCount++;
+            }
+
+            mIndex = (x - 1) + "," + (y - 1);
+            mIndex2 = (x + 1) + "," + (y - 1);
+            sIndex = (x - 1) + "," + (y + 1);
+            sIndex2 = (x + 1) + "," + (y + 1);
+            mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            mItem2 = (reflectionLines.ContainsKey(mIndex2)) ? reflectionLines[mIndex2] : ".";
+            sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            sItem2 = (reflectionLines.ContainsKey(sIndex2)) ? reflectionLines[sIndex2] : ".";
+            if (mItem == "M" && mItem2 == "M" && sItem == "S" && sItem2 == "S")
+            {
+                foundXmasCount++;
+            }
+
+            mIndex = (x + 1) + "," + (y - 1);
+            mIndex2 = (x + 1) + "," + (y + 1);
+            sIndex = (x - 1) + "," + (y - 1);
+            sIndex2 = (x - 1) + "," + (y + 1);
+            mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            mItem2 = (reflectionLines.ContainsKey(mIndex2)) ? reflectionLines[mIndex2] : ".";
+            sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            sItem2 = (reflectionLines.ContainsKey(sIndex2)) ? reflectionLines[sIndex2] : ".";
+            if (mItem == "M" && mItem2 == "M" && sItem == "S" && sItem2 == "S")
+            {
+                foundXmasCount++;
+            }
+
+            mIndex = (x + 1) + "," + (y + 1);
+            mIndex2 = (x - 1) + "," + (y + 1);
+            sIndex = (x + 1) + "," + (y - 1);
+            sIndex2 = (x - 1) + "," + (y - 1);
+            mItem = (reflectionLines.ContainsKey(mIndex)) ? reflectionLines[mIndex] : ".";
+            mItem2 = (reflectionLines.ContainsKey(mIndex2)) ? reflectionLines[mIndex2] : ".";
+            sItem = (reflectionLines.ContainsKey(sIndex)) ? reflectionLines[sIndex] : ".";
+            sItem2 = (reflectionLines.ContainsKey(sIndex2)) ? reflectionLines[sIndex2] : ".";
+            if (mItem == "M" && mItem2 == "M" && sItem == "S" && sItem2 == "S")
+            {
+                foundXmasCount++;
+            }
+
+            return foundXmasCount++;
+        }
+
+        public string[,] createGrid(string[,] grid, int xSize, int ySize)
+        {
+
+            for (int x = 0; x < xSize; x++)
+            {
+                for (int y = 0; y < ySize; y++)
+                {
+                    grid[x, y] = ".";
+                }
+            }
+
+            return grid;
+        }
+
+        public record Position(int x, int y);
+
+        public record Explorer(string text, Position position);
     }
 }
