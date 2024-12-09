@@ -68,7 +68,7 @@ namespace AoC2024.solution
                 
             }
 
-            Console.WriteLine("Part A Middle pages sum: " + middlePage);
+            Console.WriteLine("Part A Middle pages sum: " + middlePages);
 
 
             }
