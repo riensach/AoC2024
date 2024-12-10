@@ -24,34 +24,54 @@ namespace AoC2024.solution
             string[] topInput = lines[0].Split("\n");
             string[] secondInput = lines[1].Split("\n");
 
-            HashSet<orderingRule> orderingRulesGroup = new HashSet<orderingRule>();
-            HashSet<printingUpdate> printingUpdateGroup = new HashSet<printingUpdate>();          
+            List<orderingRule> orderingRulesGroup = new List<orderingRule>();
+            List<printingUpdate> printingUpdateGroup = new List<printingUpdate>();          
 
             foreach (string orderingRoles in topInput)
             {
-                string[] inputParams = orderingRoles.Split("|");
-                orderingRulesGroup.Add(new orderingRule(int.Parse(inputParams[0]), int.Parse(inputParams[1])));
+                int[] inputParams = orderingRoles.Split("|").Select(int.Parse).ToArray();
+                orderingRulesGroup.Add(new orderingRule(inputParams[0], inputParams[1]));
             }
 
             foreach (string pagesProduce in secondInput)
             {
-                string[] inputParams = pagesProduce.Split(",");
+                int[] inputParams = pagesProduce.Split(",").Select(int.Parse).ToArray();
                 printingUpdateGroup.Add(new printingUpdate(inputParams, inputParams));
 
             }
 
             int middlePages = 0;
+            int middlePagesFalse = 0;
 
             foreach (printingUpdate printingRules in printingUpdateGroup)
             {
                 bool validOrder = true;
-                foreach (string rulesToCheck in printingRules.pagesUpdate)
+                foreach (int rulesToCheck in printingRules.pagesUpdate)
                 {
-                    string currentPage = rulesToCheck;
-                    foreach (string checkingPages in printingRules.pagesUpdate)
+                    int currentPage = rulesToCheck;
+
+                    // Here is where we check the valid order
+                    foreach (orderingRule orderingRule in orderingRulesGroup)
                     {
-                        // Here is where we check the valid order
+                        if (orderingRule.firstPage == currentPage)
+                        {
+                            if(printingRules.pagesUpdate.Contains(orderingRule.secondPage) && Array.IndexOf(printingRules.pagesUpdate, orderingRule.secondPage) < Array.IndexOf(printingRules.pagesUpdate, currentPage))
+                            {
+                            //Invalid
+                                validOrder = false;
+                            }
+                        }
+
+                        if (orderingRule.secondPage == currentPage)
+                        {
+                            if (printingRules.pagesUpdate.Contains(orderingRule.secondPage) && Array.IndexOf(printingRules.pagesUpdate, orderingRule.secondPage) > Array.IndexOf(printingRules.pagesUpdate, currentPage))
+                            {
+                                //Invalid
+                                    validOrder = false;
+                            }
+                        }
                     }
+
 
 
 
@@ -62,19 +82,75 @@ namespace AoC2024.solution
                     // Get middle page
                     Double stringLength = (printingRules.pagesUpdate.Length / 2);
                     int findValue = (int) Math.Floor(stringLength);
-                    int middlePage = int.Parse(printingRules.pagesUpdate[findValue]);
+                    int middlePage = printingRules.pagesUpdate[findValue];
                     middlePages = middlePages + middlePage;
+                    continue;
                 }
-                
+
+
+
+                validOrder = false;
+                int index1 = 0;
+                int index2 = 0;
+                while (validOrder == false)
+                {
+                    validOrder = true;
+                    foreach (int rulesToCheck in printingRules.pagesUpdate)
+                    {
+                        int currentPage = rulesToCheck;
+
+                        // Here is where we check the valid order
+                        foreach (orderingRule orderingRule in orderingRulesGroup)
+                        {
+                            if (orderingRule.firstPage == currentPage)
+                            {
+                                if (printingRules.pagesUpdate.Contains(orderingRule.secondPage) && Array.IndexOf(printingRules.pagesUpdate, orderingRule.secondPage) < Array.IndexOf(printingRules.pagesUpdate, currentPage))
+                                {
+                                    //Invalid
+                                    validOrder = false;
+                                    index1 = Array.IndexOf(printingRules.pagesUpdate, orderingRule.secondPage);
+                                    index2 = Array.IndexOf(printingRules.pagesUpdate, orderingRule.firstPage);
+                                    printingRules.pagesUpdate[index1] = orderingRule.firstPage;
+                                    printingRules.pagesUpdate[index2] = orderingRule.secondPage;
+                                }
+                            }
+
+                            if (orderingRule.secondPage == currentPage)
+                            {
+                                if (printingRules.pagesUpdate.Contains(orderingRule.secondPage) && Array.IndexOf(printingRules.pagesUpdate, orderingRule.secondPage) > Array.IndexOf(printingRules.pagesUpdate, currentPage))
+                                {
+                                    //Invalid
+                                    validOrder = false;
+                                    index1 = Array.IndexOf(printingRules.pagesUpdate, orderingRule.firstPage);
+                                    index2 = Array.IndexOf(printingRules.pagesUpdate, orderingRule.secondPage);
+                                    printingRules.pagesUpdate[index1] = orderingRule.secondPage;
+                                    printingRules.pagesUpdate[index2] = orderingRule.firstPage;
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                if (validOrder == true)
+                {
+                    // Get middle page - I haven't fixed the logic on this yet
+                    Double stringLength = (printingRules.pagesUpdate.Length / 2);
+                    int findValue = (int)Math.Floor(stringLength);
+                    int middlePageFalse = printingRules.pagesUpdate[findValue];
+                    middlePagesFalse = middlePagesFalse + middlePageFalse;
+                }
+
             }
 
             Console.WriteLine("Part A Middle pages sum: " + middlePages);
+            Console.WriteLine("Part B Middle pages sum: " + middlePagesFalse);
 
 
             }
 
         public record orderingRule(int firstPage, int secondPage);
-        public record printingUpdate(string[] pagesUpdate, string[] pagesUpdateFixed);
+        public record printingUpdate(int[] pagesUpdate, int[] pagesUpdateFixed);
 
         public string output;
         
